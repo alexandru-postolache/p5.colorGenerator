@@ -11,11 +11,20 @@
 
 ## Installation
 
-Simply include the library in your p5.js project. The library relies on p5.js, so make sure to include the p5.js library first.
+You can include the library in your p5.js project in two ways:
+
+1. Download the `p5.colorGenerator.js` file and include it locally:
 
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
 <script src="path/to/p5.colorGenerator.js"></script>
+```
+
+2. Use the CDN link to include the library directly:
+
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/alexandru-postolache/p5.colorGenerator@latest/p5.colorGenerator.js"></script>
 ```
 
 ## Getting Started
