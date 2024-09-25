@@ -1,5 +1,7 @@
 # p5.ColorGenerator Library
 
+There is a demo available at [https://alexandru-postolache.github.io/p5.colorGenerator/demo](https://alexandru-postolache.github.io/p5.colorGenerator/demo)
+
 `ColorGenerator` is a p5.js-based library that allows you to generate various color schemes (shades, tints, monochromatic, complementary, triadic, etc.) from a base color. The library works in HSB (Hue, Saturation, Brightness) color mode and provides easy methods to generate and manipulate color schemes.
 
 ## Features

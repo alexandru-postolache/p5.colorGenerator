@@ -1,5 +1,19 @@
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('JetBrainsMono-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('JetBrainsMono-Bold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+}
+
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: 'JetBrains Mono', monospace;
   margin: 0;
   padding: 0;
   background-color: #f5f5f5;
@@ -85,6 +99,29 @@ h1 {
   width: 50px;
   height: 50px;
   border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+}
+
+.color-swatch::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.color-swatch:hover::after {
+  opacity: 1;
 }
 
 #waves-container {
@@ -96,20 +133,40 @@ h1 {
   z-index: -1;
 }
 
-.color-picker-container {
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+.controls-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.color-picker-container,
+.color-format-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 #colorPicker {
-  width: 50px;
-  height: 50px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
+
+#colorFormat {
+    height: 50px;
+  padding: 0.5rem;
+  border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: white;
+    font-size: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* You can remove or comment out the old .color-picker-container and .color-format-container styles if they're no longer needed */
 
 footer {
     text-align: center;
@@ -125,4 +182,19 @@ footer p {
 footer img {
     vertical-align: middle;
     margin-left: 5px;
+}
+
+.color-format-container {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+#colorFormat {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: white;
+    font-size: 1rem;
 }

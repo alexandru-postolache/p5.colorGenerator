@@ -1,6 +1,7 @@
 let colorGen;
 let waves;
 let currentColorScheme;
+let colorFormat = 'hex'; // Default format
 
 function setup() {
     let canvas = createCanvas(windowWidth, windowHeight);
@@ -16,6 +17,12 @@ function setup() {
     colorPicker.input(() => {
         colorGen = new ColorGenerator(color(colorPicker.value()));
         updateColorSchemes();
+    });
+
+    // Add event listener for color format selection
+    select('#colorFormat').changed(function() {
+        colorFormat = this.value();
+        updateColorSchemes(); // Update all color displays with new format
     });
 }
 
@@ -85,15 +92,28 @@ function updateColorDisplay(id, colors) {
         let swatch = createDiv();
         swatch.class('color-swatch');
         swatch.style('background-color', c);
+        
+        let colorValue = getColorValue(c);
+        
+        swatch.attribute('data-color', colorValue);
+        swatch.mousePressed(() => {
+            navigator.clipboard.writeText(colorValue).then(() => {
+                swatch.attribute('data-tooltip', 'Copied!');
+                setTimeout(() => {
+                    swatch.attribute('data-tooltip', colorValue);
+                }, 1000);
+            });
+        });
+        swatch.attribute('data-tooltip', colorValue);
         colorDisplay.child(swatch);
     });
     container.child(colorDisplay);
 }
 
 function copyToClipboard(colors) {
-    let hexColors = colors.map(c => '#' + hex(red(c), 2) + hex(green(c), 2) + hex(blue(c), 2));
-    let colorArrayString = JSON.stringify(hexColors);
-    navigator.clipboard.writeText(colorArrayString);
+    let colorValues = colors.map(getColorValue);
+    let text = colorValues.join(', ');
+    navigator.clipboard.writeText(text);
 }
 
 function applyScheme(colors) {
@@ -142,5 +162,34 @@ class Waves {
                 line(x, height, x, topY);
             }
         }
+    }
+}
+
+// Helper function to convert p5.js color to hex
+function colorToHex(c) {
+    let rgbColor = color(c.toString());
+    return '#' + hex(red(rgbColor), 2) + hex(green(rgbColor), 2) + hex(blue(rgbColor), 2);
+}
+
+function getColorValue(c) {
+    // Temporarily switch to RGB mode to get correct values
+    push();
+    colorMode(RGB, 255);
+    let r = red(c);
+    let g = green(c);
+    let b = blue(c);
+    pop();
+
+    switch (colorFormat) {
+        case 'rgb':
+            return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+        case 'hsb':
+            // Convert RGB to HSB
+            let h = hue(color(r, g, b));
+            let s = saturation(color(r, g, b));
+            let br = brightness(color(r, g, b));
+            return `hsb(${Math.round(h)}, ${Math.round(s)}%, ${Math.round(br)}%)`;
+        default: // hex
+            return '#' + hex(r, 2) + hex(g, 2) + hex(b, 2);
     }
 }
