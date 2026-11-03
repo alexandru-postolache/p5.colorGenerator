@@ -6,7 +6,7 @@
     <title>p5.ColorGenerator Library</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.js"></script>
     <script src="../p5.colorGenerator.js"></script>
 </head>
 <body>
@@ -20,7 +20,7 @@
                 <input type="color" id="colorPicker" value="#e39b14">
             </div>
             <div class="color-format-container">
-                <label for="colorFormat">and the color format:</label>
+                <label for="colorFormat">format</label>
                 <select id="colorFormat">
                     <option value="hex">HEX</option>
                     <option value="rgb">RGB</option>
@@ -28,11 +28,37 @@
                 </select>
             </div>
             <div class="color-format-container">
-                <label for="colorSpace">in color space:</label>
+                <label for="colorSpace">space</label>
                 <select id="colorSpace">
                     <option value="hsb">HSB</option>
                     <option value="oklch">OKLCH</option>
                 </select>
+            </div>
+            <div class="color-format-container">
+                <label for="swatchCount">colors</label>
+                <input id="swatchCount" type="number" min="2" max="8" value="5">
+            </div>
+            <div class="color-format-container">
+                <label for="harmonyDegree">harmony <span id="degreeReadout">30°</span></label>
+                <input id="harmonyDegree" type="range" min="5" max="90" value="30">
+            </div>
+            <div class="color-format-container">
+                <label for="rectangleAngle">rectangle <span id="angleReadout">60°</span></label>
+                <input id="rectangleAngle" type="range" min="15" max="90" value="60">
+            </div>
+            <label class="checkbox-container" for="includeBase">
+                <input id="includeBase" type="checkbox" checked>
+                include base
+            </label>
+            <button id="randomColor" class="control-button" type="button">Random</button>
+            <div class="color-format-container">
+                <label for="colorSeed">seed</label>
+                <input id="colorSeed" type="number" min="0" step="1">
+                <button id="applySeed" class="control-button" type="button">Apply</button>
+            </div>
+            <div class="color-picker-container">
+                <label for="mixColor">mix with</label>
+                <input type="color" id="mixColor" value="#3366cc">
             </div>
         </div>
         <div class="schemes">
@@ -52,6 +78,12 @@
                 <div id="tetradic" class="color-display"></div>
             </div>
             <div class="scheme">
+                <div id="rectangle" class="color-display"></div>
+            </div>
+            <div class="scheme">
+                <div id="even" class="color-display"></div>
+            </div>
+            <div class="scheme">
                 <div id="monochromatic" class="color-display"></div>
             </div>
             <div class="scheme">
@@ -62,6 +94,24 @@
             </div>
             <div class="scheme">
                 <div id="tones" class="color-display"></div>
+            </div>
+            <div class="scheme">
+                <div id="roles" class="color-display"></div>
+            </div>
+            <div class="scheme">
+                <div id="vision" class="color-display"></div>
+            </div>
+            <div class="scheme">
+                <div id="mix" class="color-display"></div>
+            </div>
+            <div class="scheme scheme-wide">
+                <div id="contrast"></div>
+            </div>
+            <div class="scheme">
+                <div id="image"></div>
+                <label class="file-label" for="imageFile">Sample an image
+                    <input id="imageFile" type="file" accept="image/*">
+                </label>
             </div>
         </div>
     </div>
