@@ -36,17 +36,19 @@ function setup() {
         updateColorSchemes();
     });
 
-    select('#colorFormat').changed(function() {
-        colorFormat = this.value();
+    bindSegmented('colorFormat', (value) => {
+        colorFormat = value;
         updateColorSchemes();
     });
 
-    select('#colorSpace').changed(function() {
-        colorGen.setSpace(this.value());
+    bindSegmented('colorSpace', (value) => {
+        colorGen.setSpace(value);
         updateColorSchemes();
     });
 
     select('#swatchCount').input(() => updateColorSchemes());
+    select('#countDown').mousePressed(() => stepCount(-1));
+    select('#countUp').mousePressed(() => stepCount(1));
     select('#includeBase').changed(() => updateColorSchemes());
     select('#mixColor').input(() => updateColorSchemes());
 
@@ -64,12 +66,11 @@ function setup() {
         adoptColor(new ColorGenerator({ space: colorGen.space }));
     });
 
-    select('#applySeed').mousePressed(() => {
-        const raw = select('#colorSeed').value();
-        if (raw === '') return;
-        const seed = Number(raw);
-        if (!Number.isFinite(seed)) return;
-        adoptColor(new ColorGenerator({ seed: seed, space: colorGen.space }));
+    select('#applySeed').mousePressed(applySeed);
+    select('#colorSeed').elt.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter') return;
+        event.preventDefault();
+        applySeed();
     });
 
     select('#imageFile').changed(function() {
@@ -99,6 +100,34 @@ function draw() {
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
+}
+
+function bindSegmented(id, apply) {
+    const buttons = document.querySelectorAll('#' + id + ' button');
+    buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+            buttons.forEach((other) => {
+                const selected = other === button;
+                other.classList.toggle('is-selected', selected);
+                other.setAttribute('aria-pressed', selected ? 'true' : 'false');
+            });
+            apply(button.dataset.value);
+        });
+    });
+}
+
+function stepCount(delta) {
+    const next = Math.min(8, Math.max(2, readCount() + delta));
+    select('#swatchCount').value(next);
+    updateColorSchemes();
+}
+
+function applySeed() {
+    const raw = select('#colorSeed').value();
+    if (raw === '') return;
+    const seed = Number(raw);
+    if (!Number.isFinite(seed)) return;
+    adoptColor(new ColorGenerator({ seed: seed, space: colorGen.space }));
 }
 
 function adoptColor(next) {
@@ -168,6 +197,8 @@ function updateColorSchemes() {
     updateContrastCard();
     updateImageCard(count);
     waves.updateColors(colorGen.getShades(count));
+    document.documentElement.style.setProperty('--base', colorGen.toCss());
+    select('#baseReadout').html(getColorValue(colorGen.color));
 }
 
 function updateContrastCard() {
@@ -256,7 +287,7 @@ function updateColorDisplay(id, colors, labels) {
 function schemeHeader(title, colors) {
     const header = createDiv();
     header.class('scheme-header');
-    header.child(createElement('h2', title));
+    header.child(createElement('h3', title));
     if (colors && colors.length) {
         const buttons = createDiv();
         buttons.class('scheme-buttons');
