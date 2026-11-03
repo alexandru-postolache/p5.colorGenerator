@@ -3,6 +3,18 @@ let waves;
 let currentColorScheme;
 let colorFormat = 'hex'; // Default format
 
+const SCHEME_LABELS = {
+    shades: 'Shades',
+    tints: 'Tints',
+    tones: 'Tones',
+    monochromatic: 'Monochromatic',
+    complementary: 'Complementary',
+    triadic: 'Triadic',
+    analogous: 'Analogous',
+    splitComplementary: 'Split complementary',
+    tetradic: 'Tetradic'
+};
+
 function setup() {
     let canvas = createCanvas(windowWidth, windowHeight);
     canvas.parent('waves-container');
@@ -10,19 +22,23 @@ function setup() {
     
     waves = new Waves();
     
-    colorGen = new ColorGenerator(color('#ffba06'));
+    colorGen = new ColorGenerator('#e39b14');
     updateColorSchemes();
 
     let colorPicker = select('#colorPicker');
     colorPicker.input(() => {
-        colorGen = new ColorGenerator(color(colorPicker.value()));
+        colorGen.setColor(colorPicker.value());
         updateColorSchemes();
     });
 
-    // Add event listener for color format selection
     select('#colorFormat').changed(function() {
         colorFormat = this.value();
-        updateColorSchemes(); // Update all color displays with new format
+        updateColorSchemes();
+    });
+
+    select('#colorSpace').changed(function() {
+        colorGen.setSpace(this.value());
+        updateColorSchemes();
     });
 }
 
@@ -38,6 +54,7 @@ function windowResized() {
 function updateColorSchemes() {
     updateColorDisplay('shades', colorGen.getShades(5));
     updateColorDisplay('tints', colorGen.getTints(5));
+    updateColorDisplay('tones', colorGen.getTones(5));
     updateColorDisplay('monochromatic', colorGen.getMonochromatic(5));
     updateColorDisplay('complementary', colorGen.getComplementary());
     updateColorDisplay('triadic', colorGen.getTriadic());
@@ -45,9 +62,7 @@ function updateColorSchemes() {
     updateColorDisplay('splitComplementary', colorGen.getSplitComplementary());
     updateColorDisplay('tetradic', colorGen.getTetradic());
     
-    // Update waves colors
-    let tints = colorGen.getTints(5);
-    waves.updateColors(tints);
+    waves.updateColors(colorGen.getShades(5));
 }
 
 function updateColorDisplay(id, colors) {
@@ -57,7 +72,7 @@ function updateColorDisplay(id, colors) {
     let schemeHeader = createDiv();
     schemeHeader.class('scheme-header');
     
-    let schemeTitle = createElement('h2', id.charAt(0).toUpperCase() + id.slice(1));
+    let schemeTitle = createElement('h2', SCHEME_LABELS[id] || id);
     schemeHeader.child(schemeTitle);
     
     let buttonContainer = createDiv();
@@ -165,31 +180,15 @@ class Waves {
     }
 }
 
-// Helper function to convert p5.js color to hex
-function colorToHex(c) {
-    let rgbColor = color(c.toString());
-    return '#' + hex(red(rgbColor), 2) + hex(green(rgbColor), 2) + hex(blue(rgbColor), 2);
-}
-
 function getColorValue(c) {
-    // Temporarily switch to RGB mode to get correct values
-    push();
-    colorMode(RGB, 255);
-    let r = red(c);
-    let g = green(c);
-    let b = blue(c);
-    pop();
-
     switch (colorFormat) {
         case 'rgb':
-            return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
-        case 'hsb':
-            // Convert RGB to HSB
-            let h = hue(color(r, g, b));
-            let s = saturation(color(r, g, b));
-            let br = brightness(color(r, g, b));
-            return `hsb(${Math.round(h)}, ${Math.round(s)}%, ${Math.round(br)}%)`;
-        default: // hex
-            return '#' + hex(r, 2) + hex(g, 2) + hex(b, 2);
+            return colorGen.toCss(c);
+        case 'hsb': {
+            let hsb = colorGen.toHsb(c);
+            return `hsb(${Math.round(hsb.h)}, ${Math.round(hsb.s)}%, ${Math.round(hsb.b)}%)`;
+        }
+        default:
+            return colorGen.toHex(c);
     }
 }

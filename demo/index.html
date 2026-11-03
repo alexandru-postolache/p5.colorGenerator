@@ -17,7 +17,7 @@
         <div class="controls-container">
             <div class="color-picker-container">
                 <label for="colorPicker">Choose the base color:</label>
-                <input type="color" id="colorPicker" value="#ffba06">
+                <input type="color" id="colorPicker" value="#e39b14">
             </div>
             <div class="color-format-container">
                 <label for="colorFormat">and the color format:</label>
@@ -25,6 +25,13 @@
                     <option value="hex">HEX</option>
                     <option value="rgb">RGB</option>
                     <option value="hsb">HSB</option>
+                </select>
+            </div>
+            <div class="color-format-container">
+                <label for="colorSpace">in color space:</label>
+                <select id="colorSpace">
+                    <option value="hsb">HSB</option>
+                    <option value="oklch">OKLCH</option>
                 </select>
             </div>
         </div>
@@ -52,6 +59,9 @@
             </div>
             <div class="scheme">
                 <div id="tints" class="color-display"></div>
+            </div>
+            <div class="scheme">
+                <div id="tones" class="color-display"></div>
             </div>
         </div>
     </div>

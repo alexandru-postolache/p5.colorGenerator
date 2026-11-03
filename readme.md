@@ -1,237 +1,175 @@
-# p5.ColorGenerator Library
+# p5.ColorGenerator
 
-There is a demo available at [https://alexandru-postolache.github.io/p5.colorGenerator/demo](https://alexandru-postolache.github.io/p5.colorGenerator/demo)
+There is a demo at [https://alexandru-postolache.github.io/p5.colorGenerator/demo](https://alexandru-postolache.github.io/p5.colorGenerator/demo).
 
-`ColorGenerator` is a p5.js-based library that allows you to generate various color schemes (shades, tints, monochromatic, complementary, triadic, etc.) from a base color. The library works in HSB (Hue, Saturation, Brightness) color mode and provides easy methods to generate and manipulate color schemes.
+`ColorGenerator` builds color schemes from one base color for p5.js sketches: shades, tints, tones, monochromatic ramps, and the usual hue harmonies. Ramps can stay in HSB or run in OKLCH. The library also exports colors, checks WCAG contrast, simulates color vision, samples an image, and assembles a small role palette.
 
-## Features
+Version 2 restores the sketch color mode after every call, including channel ranges. In instance mode, pass the sketch as the second argument.
 
-- Generate random base colors or use predefined ones.
-- Create multiple color schemes: complementary, triadic, tetradic, analogous, split complementary, and more.
-- Generate shades, tints, and monochromatic palettes.
-- Designed for use with p5.js, utilizing its color management features.
-
-## Installation
-
-You can include the library in your p5.js project in two ways:
-
-1. Download the `p5.colorGenerator.js` file and include it locally:
+## Install
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-<script src="path/to/p5.colorGenerator.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/alexandru-postolache/p5.colorGenerator@2.0.0/p5.colorGenerator.js"></script>
 ```
 
-2. Use the CDN link to include the library directly:
+The library is also on npm as `p5.colorgenerator` once that version is published:
 
-```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/alexandru-postolache/p5.colorGenerator@latest/p5.colorGenerator.js"></script>
+```js
+import ColorGenerator from 'p5.colorgenerator';
 ```
 
-## Getting Started
+Targets p5.js 1.4 and later. Load p5 before this file when using the script tag.
 
-### Create a `ColorGenerator` instance
+## Create a generator
 
-To start generating color schemes, instantiate a `ColorGenerator` object. You can either pass a base color or let the generator create a random one.
-
-```javascript
-let colorGen = new ColorGenerator(); // Random base color
-let colorGen = new ColorGenerator('#ff5733'); // Base color in hex
-```
-
-### Available Methods
-
----
-
-### `getShades(nr, limit = 0)`
-
-Generates an array of shades by decreasing brightness. The base color is darkened to produce `nr` number of shades. The optional `limit` parameter specifies the minimum brightness.
-
-```javascript
-let shades = colorGen.getShades(5); // Generate 5 shades
-```
-
-Example usage in a p5.js sketch:
-
-```javascript
-let colorGen = new ColorGenerator('#ff5733');
-let shades = colorGen.getShades(5);
-
-shades.forEach((shade, index) => {
-    fill(shade);
-    rect(index * 100, 0, 100, 100); // Draw squares with the shades
-});
-```
-
----
-
-### `getTints(nr, limit = 100)`
-
-Generates an array of tints by increasing brightness. The base color is lightened to produce `nr` number of tints. The optional `limit` parameter specifies the maximum brightness.
-
-```javascript
-let tints = colorGen.getTints(5); // Generate 5 tints
-```
-
-Example:
-
-```javascript
-let tints = colorGen.getTints(5);
-
-tints.forEach((tint, index) => {
-    fill(tint);
-    rect(index * 100, 0, 100, 100);
-});
-```
-
----
-
-### `getMonochromatic(nr, increaseSaturation = false, increaseBrightness = false)`
-
-Generates a monochromatic palette by adjusting both saturation and brightness. The number of colors is controlled by `nr`, and you can optionally increase saturation and/or brightness.
-
-```javascript
-let mono = colorGen.getMonochromatic(5, true, false); // Generate 5 monochromatic colors with increasing saturation
-```
-
-Example:
-
-```javascript
-let mono = colorGen.getMonochromatic(5, true, false);
-
-mono.forEach((color, index) => {
-    fill(color);
-    rect(index * 100, 0, 100, 100);
-});
-```
-
----
-
-### `getComplementary()`
-
-Returns an array with the base color and its complementary color (opposite on the color wheel).
-
-```javascript
-let complementary = colorGen.getComplementary();
-```
-
-Example:
-
-```javascript
-let complementary = colorGen.getComplementary();
-
-complementary.forEach((color, index) => {
-    fill(color);
-    rect(index * 100, 0, 100, 100);
-});
-```
-
----
-
-### `getTriadic()`
-
-Generates a triadic color scheme (three colors evenly spaced 120 degrees apart on the color wheel).
-
-```javascript
-let triadic = colorGen.getTriadic();
-```
-
-Example:
-
-```javascript
-let triadic = colorGen.getTriadic();
-
-triadic.forEach((color, index) => {
-    fill(color);
-    rect(index * 100, 0, 100, 100);
-});
-```
-
----
-
-### `getAnalogous(degree = 30)`
-
-Generates an analogous color scheme by producing colors next to the base color on the color wheel. The optional `degree` parameter defines the distance between the colors (default is 30 degrees).
-
-```javascript
-let analogous = colorGen.getAnalogous();
-```
-
-Example:
-
-```javascript
-let analogous = colorGen.getAnalogous(30);
-
-analogous.forEach((color, index) => {
-    fill(color);
-    rect(index * 100, 0, 100, 100);
-});
-```
-
----
-
-### `getSplitComplementary(degree = 30)`
-
-Generates a split complementary color scheme (two colors adjacent to the complementary color). The `degree` parameter defines how far the colors are from the base complementary color.
-
-```javascript
-let splitComp = colorGen.getSplitComplementary();
-```
-
-Example:
-
-```javascript
-let splitComp = colorGen.getSplitComplementary();
-
-splitComp.forEach((color, index) => {
-    fill(color);
-    rect(index * 100, 0, 100, 100);
-});
-```
-
----
-
-### `getTetradic()`
-
-Generates a tetradic color scheme (four colors, two complementary pairs). The result is four evenly spaced colors on the color wheel.
-
-```javascript
-let tetradic = colorGen.getTetradic();
-```
-
-Example:
-
-```javascript
-let tetradic = colorGen.getTetradic();
-
-tetradic.forEach((color, index) => {
-    fill(color);
-    rect(index * 100, 0, 100, 100);
-});
-```
-
-## Example Usage in p5.js
-
-```javascript
+```js
 let colorGen;
 
 function setup() {
-    createCanvas(600, 200);
-    colorGen = new ColorGenerator('#ff5733'); // Initialize with base color
+  createCanvas(600, 200);
+  colorGen = new ColorGenerator('#ffba06');
+  // colorGen = new ColorGenerator();            // random base
+  // colorGen = new ColorGenerator({ seed: 7 }); // same random color every run
+  // colorGen = new ColorGenerator({ h: 40, s: 90, b: 80, a: 0.8 });
 
-    let shades = colorGen.getShades(5);
-    
-    shades.forEach((shade, index) => {
-        fill(shade);
-        rect(index * 100, 0, 100, 100); // Draw shades
-    });
+  let shades = colorGen.getShades(5);
+  shades.forEach((shade, index) => {
+    fill(shade);
+    rect(index * 100, 0, 100, 100);
+  });
 }
 ```
 
----
+In instance mode:
+
+```js
+const sketch = (p) => {
+  let colorGen;
+  p.setup = () => {
+    p.createCanvas(600, 200);
+    colorGen = new ColorGenerator('#ffba06', p);
+    // or: colorGen = p.createColorGenerator('#ffba06');
+  };
+};
+new p5(sketch);
+```
+
+`setColor()` replaces the base color. `setSpace('oklch')` switches later ramps and hue rotations to OKLCH. The default space is HSB, which matches previous versions.
+
+A random base uses saturation 40–95 and brightness 35–90. Pass `seed` to reproduce it. The generator uses its own random sequence, so it does not advance p5's `random()`.
+
+## Ramps
+
+Counts include both ends. `getShades(5)` on a brightness-40 color is the base, three steps, and the limit (black by default), not a run that stops one step early.
+
+```js
+colorGen.getShades(5);                 // brightness down to 0
+colorGen.getShades(5, 15);             // stop at brightness 15
+colorGen.getShades({ count: 5, limit: 0, includeBase: false });
+
+colorGen.getTints(5);                  // toward white (brightness up, saturation down)
+colorGen.getTints(2, 70);              // only as far as brightness 70
+colorGen.getTones(5);                  // saturation down, brightness held
+
+colorGen.getMonochromatic(5);          // saturation and brightness toward 0
+colorGen.getMonochromatic(5, true, true);
+colorGen.getMonochromatic({
+  count: 5,
+  saturation: 'increase',
+  brightness: 'decrease'
+});
+```
+
+In OKLCH, shades move toward black, tints toward white, and tones lose chroma while lightness stays put.
+
+## Harmonies
+
+Hue degrees wrap with a positive modulus, so values above 360 stay on the wheel. Analogous and split complementary still return the original three colors first when you ask for more.
+
+```js
+colorGen.getComplementary();           // [base, opposite]
+colorGen.complement();                 // just the opposite
+colorGen.getTriadic();                 // 120°
+colorGen.getEven(6);
+colorGen.getAnalogous();               // ±30°, three colors
+colorGen.getAnalogous(15, 5);
+colorGen.getSplitComplementary(30);
+colorGen.getTetradic();                // square, 90°
+colorGen.getSquare();
+colorGen.getRectangle(60);             // rectangle / tetrad
+colorGen.getTetradic(60);
+colorGen.adjust({ h: 15, s: -10, b: 5 });
+```
+
+`getTetradic()` with no argument is the same square as before.
+
+## Mixing
+
+```js
+colorGen.lerpColors('#0044ff', 7);                         // short hue path in the current space
+colorGen.lerpColors('#0044ff', 7, { space: 'rgb', easing: 'easeInOut' });
+ColorGenerator.mix('#ffba06', '#0044ff', 0.5, { instance: p, space: 'oklch' });
+```
+
+Easing names are `linear`, `easeIn`, `easeOut`, and `easeInOut`. You can also pass a function.
+
+## Contrast, vision, and palettes
+
+```js
+colorGen.contrastRatio('#ffffff');          // WCAG ratio
+colorGen.recommendedText();                 // black or white, whichever contrasts more
+colorGen.lightenUntilContrast('#111111', 4.5);
+colorGen.darkenUntilContrast('#eeeeee', 4.5);
+
+colorGen.simulate('protanopia');            // also deuteranopia, tritanopia
+ColorGenerator.simulate('deuteranopia', colorGen.color, p);
+
+let roles = colorGen.getPalette();
+// roles.background, surface, primary, accent, onPrimary, onBackground
+
+colorGen.getPalette({
+  steps: 5,
+  roles: {
+    ink: { from: 'shades', index: -1 },
+    spot: { from: 'complementary', index: 1 }
+  }
+});
+```
+
+Vision simulation uses the Machado, Oliveira, and Fernandes (2009) severity-1 matrices in linear RGB.
+
+```js
+let img = loadImage('photo.jpg', () => {
+  let colors = ColorGenerator.fromImage(img, 6);
+  colorGen.setColor(colors[0]);
+});
+```
+
+`fromImage` also accepts a canvas or `{ pixels, width, height }`. Fully transparent pixels are ignored.
+
+## Export
+
+`toHex`, `toRgb`, `toCss`, and `toHsb` read the color's stored RGBA, so the sketch's `colorMode()` does not affect them. `toHsb` is always hue 0–360 and saturation and brightness 0–100. Alpha below 1 is included in the hex string.
+
+```js
+colorGen.toHex();   // #ffba06 or #ffba0666
+colorGen.toRgb();   // { r, g, b, a }
+colorGen.toCss();   // rgb(...) or rgba(...)
+colorGen.toHsb();   // { h, s, b, a }
+```
+
+The static forms `ColorGenerator.toHex(color)` and `ColorGenerator.contrastRatio(c1, c2)` take p5 colors directly.
+
+## Behavior changes in 2.0
+
+- Shade, tint, and monochromatic ramps include the limit. A count of 5 is the base plus four steps that land on the end color.
+- Tints move toward white. Saturation drops in proportion to how far brightness travels, instead of falling toward 0 on every call.
+- Monochromatic saturation and brightness each step across their own remaining range.
+- The constructor no longer leaves the sketch in HSB.
+- Alpha on the base color is copied onto generated colors.
+- Passing no color no longer draws from p5's `random()`.
+
 ## License
 
-This project is licensed under the MIT License.
-
----
+MIT. See [LICENSE](LICENSE).

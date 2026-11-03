@@ -1,0 +1,41 @@
+{
+  "name": "p5.colorgenerator",
+  "version": "2.0.0",
+  "description": "Color schemes, ramps, and palette tools for p5.js.",
+  "main": "p5.colorGenerator.js",
+  "module": "p5.colorGenerator.mjs",
+  "types": "p5.colorGenerator.d.ts",
+  "exports": {
+    ".": {
+      "types": "./p5.colorGenerator.d.ts",
+      "import": "./p5.colorGenerator.mjs",
+      "require": "./p5.colorGenerator.js"
+    }
+  },
+  "files": [
+    "p5.colorGenerator.js",
+    "p5.colorGenerator.mjs",
+    "p5.colorGenerator.d.ts",
+    "LICENSE",
+    "readme.md"
+  ],
+  "scripts": {
+    "test": "node --test --test-concurrency=1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexandru-postolache/p5.colorGenerator.git"
+  },
+  "keywords": [
+    "p5",
+    "p5.js",
+    "color",
+    "palette",
+    "generative-art"
+  ],
+  "author": "Alexandru Postolache",
+  "license": "MIT",
+  "devDependencies": {
+    "jsdom": "^25.0.1"
+  }
+}
