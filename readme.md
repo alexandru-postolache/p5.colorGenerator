@@ -8,12 +8,27 @@ Version 2 restores the sketch color mode after every call, including channel ran
 
 ## Install
 
+jsDelivr’s `@2.0.0` URL reads a git tag. It returns 404 until GitHub has a tag named `2.0.0` or `v2.0.0` on the commit that contains this file. `@latest` is the default branch, which does not include these changes until they are merged.
+
+After the 2.0 commit is on `main`:
+
+```bash
+git checkout main
+git pull
+git tag 2.0.0
+git push origin 2.0.0
+```
+
+jsDelivr usually picks up a new tag within a few minutes. If the URL still 404s, request a fresh copy:
+
+`https://purge.jsdelivr.net/gh/alexandru-postolache/p5.colorGenerator@2.0.0/p5.colorGenerator.js`
+
+Publishing to npm (`npm publish`) is separate. That is what makes `https://cdn.jsdelivr.net/npm/p5.colorgenerator@2.0.0/p5.colorGenerator.js` work.
+
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/alexandru-postolache/p5.colorGenerator@2.0.0/p5.colorGenerator.js"></script>
 ```
-
-The library is also on npm as `p5.colorgenerator` once that version is published:
 
 ```js
 import ColorGenerator from 'p5.colorgenerator';
